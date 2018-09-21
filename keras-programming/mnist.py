@@ -3,8 +3,8 @@ from __future__ import print_function
 import numpy as np
 from keras.datasets import mnist
 from keras.models import Sequential
-from keras.layers.core import Dense, Activation
-from keras.optimizers import SGD
+from keras.layers.core import Dense, Activation, Dropout
+from keras.optimizers import SGD, RMSprop, Adam
 from keras.utils import np_utils
 np.random.seed(1671) # for reproductibility
 
@@ -13,9 +13,10 @@ NB_EPOCH = 20
 BATCH_SIZE = 128
 VERBOSE = 1
 NB_CLASSES = 10 # number of outputs = number of digits
-OPTIMIZER = SGD() # SGD optimizer
+OPTIMIZER = RMSprop() # SGD optimizer
 N_HIDDEN = 128
 VALIDATION_SPLIT = 0.2 # how much TRAIN is reserved for VALIDATION
+DROPOUT = 0.3
 
 # data: shuffled and split between train and test sets
 # X_train is 60000 rows of 28x28 values --> reshaped 60000x784
@@ -50,8 +51,10 @@ print(Y_train.shape, Y_test.shape)
 model = Sequential()
 model.add(Dense(N_HIDDEN, input_shape=(RESHAPED,))) # adding fully connected layer
 model.add(Activation('relu')) # added after 92% accuracy
+model.add(Dropout(DROPOUT))
 model.add(Dense(N_HIDDEN)) # added after 92% accuracy
 model.add(Activation('relu')) # added after 92% accuracy
+model.add(Dropout(DROPOUT))
 model.add(Dense(NB_CLASSES)) # added after 92% accuracy
 model.add(Activation('softmax'))
 model.summary()
