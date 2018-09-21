@@ -9,7 +9,7 @@ from keras.utils import np_utils
 np.random.seed(1671) # for reproductibility
 
 # network and training
-NB_EPOCH = 200
+NB_EPOCH = 20
 BATCH_SIZE = 128
 VERBOSE = 1
 NB_CLASSES = 10 # number of outputs = number of digits
@@ -48,7 +48,11 @@ print(Y_train.shape, Y_test.shape)
 # Softmax squashes a k-dimensional vector of arbitrary real values into
 # a k-dimensional vector of real values in the range(0,1)
 model = Sequential()
-model.add(Dense(NB_CLASSES, input_shape=(RESHAPED,))) # adding fully connected layer
+model.add(Dense(N_HIDDEN, input_shape=(RESHAPED,))) # adding fully connected layer
+model.add(Activation('relu')) # added after 92% accuracy
+model.add(Dense(N_HIDDEN)) # added after 92% accuracy
+model.add(Activation('relu')) # added after 92% accuracy
+model.add(Dense(NB_CLASSES)) # added after 92% accuracy
 model.add(Activation('softmax'))
 model.summary()
 
@@ -57,7 +61,7 @@ model.summary()
 # this loss function is suitable for multiclass label prediction
 # we are using the metric: accuracy, which is the proportion of correct predictions
 # with respect to the targets
-model.compile(loss='categorical_crossentropy', optimizer=OPTIMIZER, metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer=OPTIMIZER,metrics=['accuracy'])
 
 # training the model
 history = model.fit(X_train, Y_train,
